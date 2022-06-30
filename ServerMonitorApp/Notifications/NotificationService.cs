@@ -23,13 +23,12 @@ public sealed class NotificationService<T> : BackgroundService {
     private async Task ProcessQueueAsync(CancellationToken cancellationToken) {
         while (!cancellationToken.IsCancellationRequested) {
             try {
-                await _publisher.WaitToListener();
                 var item = await _queue.DequeueAsync(cancellationToken);
-                _publisher.Publish(item);
+                await _publisher.PublishAsync(item);
             }
             catch (OperationCanceledException) { }
             catch (Exception exception) {
-                _logger.LogError(exception, "Error occurred processing item.");
+                _logger.LogError(exception, "Error occurred processing item");
             }
         }
     }
