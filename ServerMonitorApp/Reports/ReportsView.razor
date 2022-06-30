@@ -1,0 +1,30 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using Fluxor
+
+<CascadingValue Value="Dispatcher">
+    <div class="row">
+        <div class="col-xl-12">
+            @*<DatabaseReportView />*@
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-10">
+            <MetricsTableView/>
+        </div>
+        <div class="col-xl-2">
+            <MetricsReportSettingsView/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <MetricsReportLogsView/>
+        </div>
+    </div>
+</CascadingValue>
+
+@code {
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; } = default!;
+
+}

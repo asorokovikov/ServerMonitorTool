@@ -1,0 +1,7 @@
+{
+  "ServerConfiguration": {
+    "UpdateIntervalMs": 3000,
+    "ReconnectDelayMs": 3000,
+    "HubUrl": "https://localhost:7221/monitorhub"
+  }
+}

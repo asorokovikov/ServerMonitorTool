@@ -1,0 +1,78 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@using Fluxor
+@using ServerMonitorCore.Common
+
+<h1 class="h3 mb-3">Servers</h1>
+<div class="card">
+    <div class="card-body">
+        <table class="mb-0 table">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th>Name</th>
+                <th>IP Address</th>
+                <th>CPU (%)</th>
+                <th>Memory (%)</th>
+                <th>Disk (%)</th>
+                <th>Last update</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var (connectionId, metrics) in Model.ConnectionIdToMetrics) {
+                <tr>
+                    <td>
+                        @if (Model.IsConnectionLost(connectionId, Settings.UpdateIntervalSeconds)) {
+                            <span class="badge bg-warning">Inactive</span>
+                        }
+                        else {
+                            <span class="badge bg-success">Active</span>
+                        }
+                    </td>
+                    <td>@metrics.Snapshot.MachineName</td>
+                    <td>@metrics.IpAddress</td>
+                    <td>@($"{metrics.Snapshot.ProcessorUsagePercent:F1}")</td>
+                    <td><Tooltip Text="@metrics.Snapshot.MemoryUsage">@($"{metrics.Snapshot.MemoryUsagePercent:F1}")</Tooltip></td>
+                    <td><Tooltip Text="@metrics.Snapshot.DrivesUsage">@($"{metrics.Snapshot.DrivesUsagePercent:F1}")</Tooltip></td>
+                    <td>@Model.GetElapsedTime(connectionId).Humanize()</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public IDispatcher Dispatcher {get;set;} = default!;
+
+    [Inject]
+    public IState<MetricsReport> State { get; set; } = default!;
+
+    [Inject]
+    public IState<MetricsReportSettings> SettingsState { get; set; } = default!;
+
+    private MetricsReport Model => State.Value;
+
+    private MetricsReportSettings Settings => SettingsState.Value;
+
+    private readonly PeriodicTimer _timer = new(TimeSpan.FromMilliseconds(1000));
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new StartReceivingMetricsAction());
+        Task.Run(async () => {
+            while (await _timer.WaitForNextTickAsync()) {
+                await InvokeAsync(StateHasChanged);
+            }});
+    }
+
+    protected override void Dispose(bool disposing) {
+        base.Dispose(disposing);
+        if (disposing) {
+            _timer.Dispose();
+            Dispatcher.Dispatch(new StopReceivingMetricsAction());
+        }
+    }
+}

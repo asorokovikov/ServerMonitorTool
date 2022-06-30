@@ -1,0 +1,36 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@using Fluxor
+
+<h1 class="h3 mb-3">Settings</h1>
+<div class="card">
+
+    <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">Update interval</label>
+                <NumericInput
+                    Min="1"
+                    Value="Model.UpdateIntervalSeconds"
+                    DefaultValue="MetricsReportSettings.Default.UpdateIntervalSeconds"
+                    ValueChanged="value => Dispatcher.Dispatch(new UpdateIntervalAction(value))"
+
+                    >
+                </NumericInput>
+                <small class="text-muted form-text">
+                    Servers send metrics every @Model.UpdateIntervalSeconds seconds
+                </small>
+            </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public IDispatcher Dispatcher {get;set;} = default!;
+
+    [Inject]
+    public IState<MetricsReportSettings> State { get; set; } = default!;
+
+    private MetricsReportSettings Model => State.Value;
+
+}

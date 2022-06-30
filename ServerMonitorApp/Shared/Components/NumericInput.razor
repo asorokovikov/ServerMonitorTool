@@ -1,0 +1,118 @@
+﻿@using ServerMonitorApp.Common
+@using System.Globalization
+@using System.Diagnostics.CodeAnalysis
+
+<div class="@Class">
+    <input
+        class="form-control @_isInvalid.T("is-invalid") @IsNotDefaultValue.T("nondefault")"
+        @bind="CurrentValueAsString" 
+        @bind:event="oninput" 
+        @onfocusout="OnFocusOut"
+        @onkeydown="OnKeyDown"
+        @attributes="@AttributesDictionary"
+        placeholder="@Placeholder"
+    />
+    <div class="invalid-feedback">@_parsingError</div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int Value {get;set;}
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public int Min { get; set; } = int.MinValue;
+
+    [Parameter]
+    public int Max { get; set; } = int.MaxValue;
+
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public int DefaultValue { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? AttributesDictionary { get; set; }
+
+    public bool IsNotDefaultValue => !DefaultValue.Equals(Value);
+
+    protected override void OnParametersSet() {
+        CurrentValueAsString = FormatValueAsString(Value);
+    }
+
+    private int CurrentValue {
+        get => Value;
+        set {
+            if (value == Value)
+                return;
+            Value = Math.Max(Math.Min(value, Max), Min);
+            ValueChanged.InvokeAsync(Value);
+        }
+    }
+
+    private string? _currentString;
+    private string CurrentValueAsString {
+        get => _currentString ?? string.Empty;
+        set {
+            if (_currentString == value)
+                return;
+            _currentString = value;
+            if (!string.IsNullOrEmpty(value) && !TryParseValueFromString(value, out var parsedValue, out var validationErrorMessage)) {
+                _isInvalid = true;
+                _parsingError = validationErrorMessage;
+            }
+            else {
+                _isInvalid = false;
+                _parsingError = null;
+            }
+        }
+    }
+
+    private string FormatValueAsString(int value) => 
+        value.ToString(CultureInfo.InvariantCulture);
+
+    private bool TryParseValueFromString(
+        string? value, 
+        out int result, 
+        [NotNullWhen(false)] out string? validationErrorMessage
+    ) {
+        validationErrorMessage = null;
+        if (int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result) && IsCorrectRange(result))
+            return true;
+
+        validationErrorMessage = $"Enter a numeric value greater than zero";
+        return false;
+    }
+
+    private bool _isInvalid { get;set;}
+    private string? _parsingError { get;set;}
+
+    private bool IsCorrectRange(int value) =>
+        value >= Min && value <= Max;
+
+    private void OnFocusOut(){
+        if (TryParseValueFromString(CurrentValueAsString, out var value, out var _) && IsCorrectRange(value)) 
+            ValueChanged.InvokeAsync(value);
+        else {
+            CurrentValueAsString = FormatValueAsString(Value);
+        }
+    }
+
+    private void OnKeyDown(KeyboardEventArgs args) {
+        switch (args.Key) {
+            case "Enter":
+                OnFocusOut();
+                break;
+            case "Escape":
+                CurrentValueAsString = FormatValueAsString(Value);
+                break;
+        }
+    }
+}

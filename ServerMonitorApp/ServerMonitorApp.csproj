@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>9e617c09-82b9-4edc-9f1e-0f47270ad5b6</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Fluxor" Version="5.4.0" />
+		<PackageReference Include="Fluxor.Blazor.Web" Version="5.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.6" />
+		<PackageReference Include="Npgsql" Version="6.0.5" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(Configuration)=='Debug'">
+		<PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.4.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ServerMonitorCore\ServerMonitorCore.csproj" />
+	</ItemGroup>
+
+</Project>
