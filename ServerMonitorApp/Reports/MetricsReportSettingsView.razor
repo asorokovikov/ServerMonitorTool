@@ -2,24 +2,21 @@
 
 @using Fluxor
 
-<h1 class="h3 mb-3">Settings</h1>
 <div class="card">
-
+    <div class="card-header">
+        <div class="card-title mb-0 h5">Settings</div>
+    </div>
     <div class="card-body">
-            <div class="mb-3">
-                <label class="form-label">Update interval</label>
-                <NumericInput
-                    Min="1"
-                    Value="Model.UpdateIntervalSeconds"
-                    DefaultValue="MetricsReportSettings.Default.UpdateIntervalSeconds"
-                    ValueChanged="value => Dispatcher.Dispatch(new UpdateIntervalAction(value))"
-
-                    >
-                </NumericInput>
-                <small class="text-muted form-text">
-                    Servers send metrics every @Model.UpdateIntervalSeconds seconds
-                </small>
-            </div>
+            <label class="form-label">Update interval</label>
+            <NumericInput
+                Min="1"
+                Value="Model.UpdateIntervalSeconds"
+                DefaultValue="MetricsReportSettings.Default.UpdateIntervalSeconds"
+                ValueChanged="value => Dispatcher.Dispatch(new UpdateIntervalAction(value))">
+            </NumericInput>
+            <small class="text-muted form-text">
+                Servers send metrics every @Model.UpdateIntervalSeconds seconds
+            </small>
     </div>
 </div>
 

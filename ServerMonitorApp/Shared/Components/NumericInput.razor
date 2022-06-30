@@ -98,8 +98,8 @@
         value >= Min && value <= Max;
 
     private void OnFocusOut(){
-        if (TryParseValueFromString(CurrentValueAsString, out var value, out var _) && IsCorrectRange(value)) 
-            ValueChanged.InvokeAsync(value);
+        if (TryParseValueFromString(CurrentValueAsString, out var value, out var _) && IsCorrectRange(value))
+            CurrentValue = value;
         else {
             CurrentValueAsString = FormatValueAsString(Value);
         }

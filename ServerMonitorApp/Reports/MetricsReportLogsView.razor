@@ -3,23 +3,46 @@
 @using Fluxor
 @using ServerMonitorApp.Common
 @using ServerMonitorApp.Reports
+@using ServerMonitorCore.Common
 
-<h1 class="h3 mb-3"><FeatherDatabase  Size="100" Color="#FFF" StrokeWidth="2.8f" /> Logs</h1>
 <div class="card">
-
-    <div class="list-group list-group-flush">
+    <div class="card-header">
+        <div class="card-title mb-0 h5">Logs</div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th style="width: 5%">Timestamp</th>
+            <th style="width: 5%">Level</th>
+            <th style="width: 5%">Thread</th>
+            <th style="width: 10%">Source</th>
+            <th>Message</th>
+        </tr>
+        </thead>
+        <tbody>
         @foreach (var message in Model.Messages.TakeLast(10)) {
-            <div class="list-group-item @(GetLogLevelCssClass(message.LogLevel))">
-                @message
-            </div>
+            <tr class="table-@GetLogLevelCssClass(message.LogLevel)">
+                <td>@message.Timestamp.ToString("T")</td>
+                <td>@message.LogLevel</td>
+                <td>@message.ThreadId</td>
+                <td>@message.Source.LastWord('.')</td>
+                <td>@message.Body</td>
+            </tr>
             @if (message.Exception != null) {
-                <div class="list-group-item list-group-item-danger">
-                    @message.Exception.Message
-                    @message.Exception.InnerException?.Message
-                </div>
+                <tr class="table-danger">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @message.Exception.Message
+                        @message.Exception.InnerException?.Message
+                    </td>
+                </tr>
             }
         }
-    </div>
+        </tbody>
+    </table>
 </div>
 
 @code {
@@ -47,11 +70,11 @@
     private string
     GetLogLevelCssClass(LogLevel logLevel) => logLevel switch {
         LogLevel.Trace => string.Empty,
-        LogLevel.Debug => "list-group-item-success",
+        LogLevel.Debug => string.Empty,
         LogLevel.Information => string.Empty,
-        LogLevel.Warning => "list-group-item-primary",
-        LogLevel.Error => "list-group-item-danger",
-        LogLevel.Critical => "list-group-item-warning",
+        LogLevel.Warning => "primary",
+        LogLevel.Error => "danger",
+        LogLevel.Critical => "danger",
         LogLevel.None => string.Empty,
         _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
     };

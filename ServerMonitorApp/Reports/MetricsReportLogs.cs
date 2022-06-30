@@ -7,7 +7,6 @@ using ServerMonitorApp.Common;
 
 namespace ServerMonitorApp.Reports;
 
-//public record AddServerMetricsAction(ServerMetrics metrics);
 public record StartReceivingLogsAction();
 public record StopReceivingLogsAction();
 

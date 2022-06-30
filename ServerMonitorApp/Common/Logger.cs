@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging.Configuration;
 using System.Collections.Concurrent;
 using ServerMonitorApp.Notifications;
+using ServerMonitorCore.Common;
 
 namespace ServerMonitorApp.Common;
 
@@ -10,10 +11,10 @@ public class LogMessage {
     public string Body { get; }
     public LogLevel LogLevel { get; }
     public int ThreadId { get; }
-    public DateTime Timestamp { get; }
+    public DateTimeOffset Timestamp { get; }
     public Exception? Exception { get; }
 
-    public LogMessage(string source, string body, LogLevel logLevel, int threadId, DateTime timestamp, Exception? exception) {
+    public LogMessage(string source, string body, LogLevel logLevel, int threadId, DateTimeOffset timestamp, Exception? exception) {
         Source = source;
         Body = body;
         LogLevel = logLevel;
@@ -22,8 +23,7 @@ public class LogMessage {
         Exception = exception;
     }
 
-    public override string ToString() => 
-        $"[{Timestamp.ToLongTimeString()}] (Thread {ThreadId}) {Body}";
+    public override string ToString() => this.ToJson();
 }
 
 public sealed class Logger : ILogger {
@@ -56,7 +56,7 @@ public sealed class Logger : ILogger {
             threadId: Environment.CurrentManagedThreadId,
             source: _loggerName,
             body: $"{formatter(state, exception)}",
-            timestamp: DateTime.Now,
+            timestamp: DateTimeOffset.Now, 
             exception: exception
         ));
     }
