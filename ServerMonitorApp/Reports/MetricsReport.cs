@@ -6,7 +6,6 @@ using System.Diagnostics;
 
 namespace ServerMonitorApp.Reports;
 
-public record AddServerMetricsAction(ServerMetrics metrics);
 public record StartReceivingMetricsAction();
 public record StopReceivingMetricsAction();
 
@@ -42,7 +41,6 @@ public static class MetricsReportHelper {
     RemoveServer(this MetricsReport report, string connectionId) => new(
         connectionIdToMetrics: report.ConnectionIdToMetrics.Remove(connectionId)
     );
-
 }
 
 public sealed class MetricsReportEffect : IDisposable {
