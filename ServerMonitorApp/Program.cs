@@ -1,7 +1,7 @@
 using ServerMonitorApp.Common;
 using ServerMonitorApp.Hubs;
 using ServerMonitorApp.Notifications;
-using ServerMonitorApp.Services;
+using ServerMonitorApp.Database;
 using Microsoft.AspNetCore.ResponseCompression;
 using Fluxor;
 using ServerMonitorCore;
@@ -28,12 +28,12 @@ builder.Services.AddResponseCompression(options => {
 });
 
 builder.Logging.AddLogger();
-builder.Services.AddNotificationManager<LogMessage>();
-builder.Services.AddNotificationManager<ServerMetrics>();
-builder.Services.AddHostedService<DatabaseService>();
-builder.Services.AddSingleton<IMetricsRepository, DefaultMetricsRepository>(); 
-
 builder.Services.Configure<DatabaseConfiguration>(builder.Configuration.GetSection(nameof(DatabaseConfiguration)));
+builder.Services.AddTransient<IRepository<ServerMetrics>, DefaultMetricsRepository>();
+builder.Services.AddTransient<DefaultMetricsRepository>();
+builder.Services.AddHostedService<MetricsProcessingService>();
+builder.Services.AddNotification<LogMessage>();
+builder.Services.AddNotification<ServerMetrics>();
 
 var app = builder.Build();
 
@@ -51,5 +51,5 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapHub<MonitorHub>("/monitorhub");
 app.MapFallbackToPage("/_Host");
-
+app.PrepareDatabase();
 app.Run();

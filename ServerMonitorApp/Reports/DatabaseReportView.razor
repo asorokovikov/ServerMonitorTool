@@ -1,17 +1,20 @@
-﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@using ServerMonitorApp.Database
+@using ServerMonitorCore
+@using System.Collections.Immutable
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <h1 class="h3 mb-3">Database</h1>
 <div class="row">
-    <div class="col-lg-2 col-md-6">
+    <div class="col-lg-6 col-md-6">
         <div class="card">
             <div class="px-4 pt-4 card-header">
-                <div class="mb-0 card-title h5">Connection status <span class="my-2 badge bg-danger">Disconnnected</span></div>
+                <div class="mb-0 card-title h5">Database<span class="my-2 badge bg-danger">Disconnnected</span></div>
             </div>
             <div class="px-4 pt-2 card-body">
                 <i class="bi bi-server btn-outline-danger" style="font-size: 7rem;"></i>
                 @*<i class="bi bi-server" style="font-size: 7rem; color: cornflowerblue;"></i>*@
                 <p>Failed to connect the database</p>
-                <a role="button" href="#" class="btn btn-primary">Connect</a>
+                <a role="button" href="#" class="btn btn-primary" @onclick="OnConnectButtonClicked">Connect</a>
             </div>
         </div>
     </div>
@@ -38,7 +41,6 @@
 
 </div>
 
-
 @code {
 
     [CascadingParameter]
@@ -46,6 +48,9 @@
 
     [Inject]
     public IState<DatabaseReport> State { get; set; } = default!;
+
+    [Inject]
+    public IRepository<ServerMetrics> Repository { get; set; } = default!;
 
     public DatabaseReport Model => State.Value;
 
@@ -60,4 +65,10 @@
             //Dispatcher.Dispatch(new StopReceivingLogsAction());
         }
     }
+
+    private async Task OnConnectButtonClicked() {
+        var metrics = new ServerMetrics(new MetricsSnapshot("hello", 5.0f, 500, 5000, ImmutableList<DriveMetrics>.Empty), "connectionId", "127.0.0.1", DateTimeOffset.Now);
+        await Repository.CreateAsync(metrics);
+    }
+
 }

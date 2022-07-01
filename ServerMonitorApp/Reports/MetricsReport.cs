@@ -23,7 +23,7 @@ public record MetricsReport {
     private MetricsReport() : this(ImmutableDictionary<string, ServerMetrics>.Empty) { }
 
     public TimeSpan GetElapsedTime(string connectionId) =>
-        DateTime.Now.Subtract(ConnectionIdToMetrics[connectionId].Timestamp);
+        DateTimeOffset.Now.Subtract(ConnectionIdToMetrics[connectionId].Timestamp);
 
     public bool IsConnectionLost(string connectionId, int updateIntervalSeconds) {
         var elapsedTime = GetElapsedTime(connectionId);
@@ -32,10 +32,17 @@ public record MetricsReport {
 }
 
 public static class MetricsReportHelper {
+
     public static MetricsReport
     AddServerMetrics(this MetricsReport report, ServerMetrics metrics) => new(
         connectionIdToMetrics: report.ConnectionIdToMetrics.SetItem(metrics.ConnectionId, metrics)
     );
+
+    public static MetricsReport
+    RemoveServer(this MetricsReport report, string connectionId) => new(
+        connectionIdToMetrics: report.ConnectionIdToMetrics.Remove(connectionId)
+    );
+
 }
 
 public sealed class MetricsReportEffect : IDisposable {

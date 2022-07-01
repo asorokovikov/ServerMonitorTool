@@ -48,7 +48,7 @@ DefaultNotificationManager<T> : INotificationManager<T>, INotificationPublisher<
 public static class ServiceCollectionHelper {
 
     public static IServiceCollection
-    AddNotificationManager<T>(this IServiceCollection services) {
+    AddNotification<T>(this IServiceCollection services) {
         var manager = new DefaultNotificationManager<T>();
         services.AddSingleton<INotificationPublisher<T>>(manager);
         services.AddSingleton<INotificationManager<T>>(manager);

@@ -1,16 +1,31 @@
 ﻿@page "/"
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-@using ServerMonitorApp.Common
-@using ServerMonitorApp.Hubs
-@using ServerMonitorApp.Notifications
-@using ServerMonitorCore
-@using Microsoft.AspNetCore.SignalR
-@using System.Collections.Immutable
 @using ServerMonitorApp.Reports
 
 <PageTitle>Monitoring Tool</PageTitle>
+<CascadingValue Value="Dispatcher">
+    <div class="p-0 container-fluid">
+        <h1 class="mb-4">Monitoring Tool</h1>
+        <div class="row">
+            <div class="col-xl-8">
+                <MetricsReportView/>
+            </div>
+            <div class="col-xl-4">
+                <MetricsReportSettingsView/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <MetricsReportLogsView/>
+            </div>
+        </div>
+    </div>
+</CascadingValue>
 
-<div class="p-0 container-fluid">
-    <ReportsView />
-</div>
+@code {
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; } = default!;
+
+}

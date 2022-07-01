@@ -8,7 +8,7 @@
 span {
     visibility: hidden;
     position: absolute;
-    width: 150px;
+    width: 250px;
     bottom: 100%;
     left: 50%;
     margin-left: -60px;
@@ -19,6 +19,7 @@ span {
     border-radius: 6px;
     z-index: 1;
     white-space: pre-line;
+    word-wrap: break-word;
 }
 
 span::after {

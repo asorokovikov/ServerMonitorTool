@@ -37,7 +37,7 @@ MonitorHub : Hub<IMonitorHubClient> {
         var feature = Context.Features.Get<IHttpConnectionFeature>();
         var serverIp = feature?.RemoteIpAddress?.MapToIPv4().ToString() ?? "none";
         _logger.LogInformation($"Received metrics: {snapshot.MachineName} {snapshot}");
-        var message = snapshot.ToServerMetrics(connectionId: Context.ConnectionId, ipAddress: serverIp, timestamp: DateTime.Now);
+        var message = snapshot.ToServerMetrics(connectionId: Context.ConnectionId, ipAddress: serverIp, timestamp: DateTimeOffset.Now);
         await _queue.EnqueueAsync(message);
     }
 }

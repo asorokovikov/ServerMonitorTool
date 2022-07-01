@@ -12,7 +12,7 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th style="width: 5%">Timestamp</th>
+            <th style="width: 5%">Time</th>
             <th style="width: 5%">Level</th>
             <th style="width: 5%">Thread</th>
             <th style="width: 10%">Source</th>
@@ -25,7 +25,11 @@
                 <td>@message.Timestamp.ToString("T")</td>
                 <td>@message.LogLevel</td>
                 <td>@message.ThreadId</td>
-                <td>@message.Source.LastWord('.')</td>
+                <td>
+                    <Tooltip Text="@message.Source">
+                        @message.Source.LastWord('.')
+                    </Tooltip>
+                </td>
                 <td>@message.Body</td>
             </tr>
             @if (message.Exception != null) {
@@ -34,9 +38,14 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>
-                        @message.Exception.Message
-                        @message.Exception.InnerException?.Message
+                <td> 
+                    @if (message.Body != message.Exception.Message) {
+                             @message.Exception.Message
+                             @message.Exception.InnerException?.Message
+                         }
+                    else {
+                        @message.Exception.StackTrace
+                    }
                     </td>
                 </tr>
             }
