@@ -3,7 +3,7 @@
 namespace ServerMonitorCore;
 
 public interface IMonitorHubClient {
-    Task SendConfiguration(ConfigurationMessage message);
+    Task ReceiveConfiguration(ConfigurationMessage message);
 }
 
 public sealed class 

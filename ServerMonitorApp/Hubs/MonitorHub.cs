@@ -19,7 +19,7 @@ MonitorHub : Hub<IMonitorHubClient> {
     public override async Task OnConnectedAsync() {  
         _logger.LogInformation($"Server connected (Id={Context.ConnectionId})");
         _logger.LogWarning($"Sending {nameof(ConfigurationMessage)}={CurrentConfiguration} to server with Id={Context.ConnectionId}");
-        await Clients.Caller.SendConfiguration(CurrentConfiguration);
+        await Clients.Caller.ReceiveConfiguration(CurrentConfiguration);
         await base.OnConnectedAsync();
     }
 

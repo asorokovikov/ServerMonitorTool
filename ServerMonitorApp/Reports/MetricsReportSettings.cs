@@ -36,7 +36,7 @@ public sealed class MetricsReportSettingsEffect {
     public async Task OnUpdateInterval(UpdateIntervalAction action, IDispatcher dispatcher) {
         MonitorHub.CurrentConfiguration = new ConfigurationMessage(action.UpdateIntervalSeconds);
         _logger.LogWarning($"Sending {nameof(ConfigurationMessage)} to servers: {MonitorHub.CurrentConfiguration}");
-        await _hubContext.Clients.All.SendConfiguration(MonitorHub.CurrentConfiguration);
+        await _hubContext.Clients.All.ReceiveConfiguration(MonitorHub.CurrentConfiguration);
         dispatcher.Dispatch<MetricsReportSettings>(x => x with { UpdateIntervalSeconds = action.UpdateIntervalSeconds });
     }
 }
