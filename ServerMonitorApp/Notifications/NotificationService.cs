@@ -23,8 +23,8 @@ public sealed class NotificationService<T> : BackgroundService {
     private async Task ProcessQueueAsync(CancellationToken cancellationToken) {
         while (!cancellationToken.IsCancellationRequested) {
             try {
-                var item = await _queue.DequeueAsync(cancellationToken);
-                await _publisher.PublishAsync(item);
+                var item = await _queue.DequeueAsync(cancellationToken).ConfigureAwait(false);
+                await _publisher.PublishAsync(item).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
             catch (Exception exception) {

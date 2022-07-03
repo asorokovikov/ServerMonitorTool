@@ -21,7 +21,7 @@ DefaultNotificationManager<T> : INotificationManager<T>, INotificationPublisher<
     }
 
     public async Task PublishAsync(T item) {
-        await WaitToFirstListener();
+        await WaitToFirstListener().ConfigureAwait(false);
         NotificationEvent?.Invoke(item);
     }
 
