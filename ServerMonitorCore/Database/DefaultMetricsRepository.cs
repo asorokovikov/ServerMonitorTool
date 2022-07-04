@@ -14,7 +14,11 @@ public interface IRepository<T>  {
     Task UpdateAsync(T item);
 }
 
-public sealed class DefaultMetricsRepository : IRepository<ServerMetrics> {
+public interface IMetricsRepository : IRepository<ServerMetrics> {
+    Task<IReadOnlyCollection<ServerMetrics>> GetLatestMetrics();
+}
+
+public sealed class DefaultMetricsRepository : IMetricsRepository, IRepository<ServerMetrics> {
     private readonly DatabaseConfiguration _configuration;
     private readonly ILogger _logger;
     private const string TableName = "metrics";
@@ -85,6 +89,22 @@ public sealed class DefaultMetricsRepository : IRepository<ServerMetrics> {
 
     public async Task<IReadOnlyCollection<ServerMetrics>> GetAllAsync() {
         const string query = $"SELECT * FROM {TableName}";
+        var result = new List<ServerMetrics>();
+
+        await using var connection = _configuration.GetConnection();
+        await connection.OpenAsync();
+
+        await using var command = new NpgsqlCommand(query, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync()) {
+            result.Add(reader.ReadServerMetrics());
+        }
+        _logger.LogInformation($"Retrieved items from the database: {result.Count}");
+        return result;
+    }
+
+    public async Task<IReadOnlyCollection<ServerMetrics>> GetLatestMetrics() {
+        const string query = $"SELECT DISTINCT ON (ipaddress) * FROM {TableName} ORDER BY ipaddress, timestamp DESC";
         var result = new List<ServerMetrics>();
 
         await using var connection = _configuration.GetConnection();

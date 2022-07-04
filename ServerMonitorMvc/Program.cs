@@ -5,16 +5,13 @@ using ServerMonitorCore.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
 
 builder.Services.Configure<DatabaseConfiguration>(builder.Configuration.GetSection(nameof(DatabaseConfiguration)));
-builder.Services.AddTransient<IRepository<ServerMetrics>, DefaultMetricsRepository>();
-builder.Services.AddTransient<DefaultMetricsRepository>();
+builder.Services.AddDatabase();
 builder.Services.AddHostedService<MetricsProcessingService>();
 builder.Services.AddNotification<ServerMetrics>();
-
 
 var app = builder.Build();
 

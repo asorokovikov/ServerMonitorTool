@@ -1,4 +1,5 @@
-﻿@model MetricsReportModel
+﻿@using ServerMonitorCore.Common
+@model MetricsReportModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -11,34 +12,30 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-title mb-0 h5">Servers</div>
+                    <div>
+                        <form asp-controller="Home" asp-action="Index" method="post">
+                        Update interval: <input type="number" name="UpdateInterval" value="5"/>
+                        <input type="submit" value="Send"/>
+                        </form>
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="mb-0 table">
                         <thead>
                         <tr>
-                            <th>Name</th>
                             <th>IP Address</th>
                             <th>CPU (%)</th>
                             <th>Memory (%)</th>
-                            <th>Disk (%)</th>
+                            <th>Last update</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach (var metrics in Model.Metrics) {
+                        @foreach (var item in Model.Metrics) {
                             <tr>
-                                <td>@metrics.Snapshot.MachineName</td>
-                                <td>@metrics.IpAddress</td>
-                                <td>@($"{metrics.Snapshot.ProcessorUsagePercent:F1}")</td>
-                                <td>
-                                    <Tooltip Text="@metrics.Snapshot.MemoryUsage">
-                                        @($"{metrics.Snapshot.MemoryUsagePercent:F1}")
-                                    </Tooltip>
-                                </td>
-                                <td>
-                                    <Tooltip Text="@metrics.Snapshot.DrivesUsage">
-                                        @($"{metrics.Snapshot.DrivesUsagePercent:F1}")
-                                    </Tooltip>
-                                </td>
+                                <td>@item.IpAddress</td>
+                                <td>@($"{item.Snapshot.ProcessorUsagePercent:F1}")</td>
+                                <td>@($"{item.Snapshot.MemoryUsagePercent:F1}")</td>
+                                <td>@item.GetElapsedTime().Humanize()</td>
                             </tr>
                         }
                         </tbody>

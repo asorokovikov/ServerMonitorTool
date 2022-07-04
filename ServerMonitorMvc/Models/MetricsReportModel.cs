@@ -8,4 +8,11 @@ public sealed class MetricsReportModel {
     public MetricsReportModel(IEnumerable<ServerMetrics> items) {
         Metrics = items.ToImmutableList();
     }
+
+}
+
+public static class MetricsHelper {
+    public static TimeSpan
+    GetElapsedTime(this ServerMetrics metrics) =>
+        DateTimeOffset.Now.Subtract(metrics.Timestamp);
 }

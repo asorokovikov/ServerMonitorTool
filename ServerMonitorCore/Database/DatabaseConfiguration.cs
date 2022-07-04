@@ -21,11 +21,20 @@ public static class DatabaseConfigurationHelper {
 }
 
 public static class DatabaseHelper {
+
     public static IHost PrepareDatabase(this IHost app) {
         using var scopedServices = app.Services.CreateScope();
         var serviceProvider = scopedServices.ServiceProvider;
         var repository = serviceProvider.GetRequiredService<DefaultMetricsRepository>();
         repository.InitializeDatabaseAsync().Wait();
         return app;
+    }
+
+    public static IServiceCollection
+    AddDatabase(this IServiceCollection services) {
+        services.AddTransient<IRepository<ServerMetrics>, DefaultMetricsRepository>();
+        services.AddTransient<IMetricsRepository, DefaultMetricsRepository>();
+        services.AddTransient<DefaultMetricsRepository>();
+        return services;
     }
 }
