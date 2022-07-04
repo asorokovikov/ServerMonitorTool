@@ -1,8 +1,8 @@
 ﻿using Fluxor;
-using ServerMonitorApp.Notifications;
 using ServerMonitorCore;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using ServerMonitorCore.Notifications;
 
 namespace ServerMonitorApp.Reports;
 

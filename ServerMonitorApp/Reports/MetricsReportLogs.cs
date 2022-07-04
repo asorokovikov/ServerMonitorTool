@@ -1,9 +1,9 @@
 ﻿using Fluxor;
-using ServerMonitorApp.Notifications;
 using ServerMonitorCore;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using ServerMonitorApp.Common;
+using ServerMonitorCore.Notifications;
 
 namespace ServerMonitorApp.Reports;
 

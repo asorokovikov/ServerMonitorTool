@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging.Configuration;
 using System.Collections.Concurrent;
-using ServerMonitorApp.Notifications;
 using ServerMonitorCore.Common;
+using ServerMonitorCore.Database;
+using ServerMonitorCore.Notifications;
 
 namespace ServerMonitorApp.Common;
 

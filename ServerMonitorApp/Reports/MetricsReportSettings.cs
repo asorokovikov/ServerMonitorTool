@@ -1,7 +1,7 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.SignalR;
-using ServerMonitorApp.Hubs;
 using ServerMonitorCore;
+using ServerMonitorCore.Hubs;
 
 namespace ServerMonitorApp.Reports;
 
