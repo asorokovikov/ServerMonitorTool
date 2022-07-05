@@ -27,7 +27,7 @@ public sealed class MetricsProcessingService : BackgroundService {
         while (!stoppingToken.IsCancellationRequested) {
             try {
                 var item = await _channel.Reader.ReadAsync(stoppingToken).ConfigureAwait(false);
-                await _repository.CreateAsync(item);
+                await _repository.CreateAsync(item).ConfigureAwait(false);
             }
             catch (OperationCanceledException) { }
             catch (Exception exception) {

@@ -5,8 +5,10 @@ namespace ServerMonitorMvc.Models;
 
 public sealed class MetricsReportModel {
     public IReadOnlyCollection<ServerMetrics> Metrics { get; init; }
-    public MetricsReportModel(IEnumerable<ServerMetrics> items) {
+    public int UpdateIntervalSeconds { get; init; }
+    public MetricsReportModel(IEnumerable<ServerMetrics> items, int updateIntervalSeconds) {
         Metrics = items.ToImmutableList();
+        UpdateIntervalSeconds = updateIntervalSeconds;
     }
 
 }

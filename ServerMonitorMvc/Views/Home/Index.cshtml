@@ -14,7 +14,7 @@
                     <div class="card-title mb-0 h5">Servers</div>
                     <div>
                         <form asp-controller="Home" asp-action="Index" method="post">
-                        Update interval: <input type="number" name="UpdateInterval" value="5"/>
+                        Update interval: <input type="number" name="UpdateInterval" value="@Model.UpdateIntervalSeconds"/>
                         <input type="submit" value="Send"/>
                         </form>
                     </div>

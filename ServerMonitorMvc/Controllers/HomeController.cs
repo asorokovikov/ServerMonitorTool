@@ -26,7 +26,7 @@ public class HomeController : Controller {
 
     public async Task<IActionResult> Index() {
         var items = await _repository.GetLatestMetrics();
-        var model = new MetricsReportModel(items);
+        var model = new MetricsReportModel(items, 5);
         Response.Headers.Add("Refresh", "5");
         return View(model);
     }
@@ -37,7 +37,7 @@ public class HomeController : Controller {
         MonitorHub.CurrentConfiguration = new(updateInterval);
         _logger.LogWarning($"Sending {nameof(ConfigurationMessage)} to servers: {MonitorHub.CurrentConfiguration}");
         await _hubContext.Clients.All.ReceiveConfiguration(MonitorHub.CurrentConfiguration);
-        return await Index();
+        return RedirectToAction(nameof(Index));
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
