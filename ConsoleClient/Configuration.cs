@@ -15,7 +15,6 @@ public sealed class ServerConfiguration {
                 throw new InvalidOperationException("Failed to parse ports from the configuration file");
             results.Add($"https://{Host}:{port}/{HubName}");
         }
-
         return results;
     }
 }

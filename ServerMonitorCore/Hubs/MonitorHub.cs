@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using System.Net;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using ServerMonitorCore.Notifications;
@@ -37,7 +38,7 @@ MonitorHub : Hub<IMonitorHubClient> {
         var feature = Context.Features.Get<IHttpConnectionFeature>();
         var serverIp = feature?.RemoteIpAddress?.MapToIPv4().ToString() ?? "none";
         _logger.LogInformation($"Received metrics: {snapshot.MachineName} {snapshot}");
-        var message = snapshot.ToServerMetrics(connectionId: Context.ConnectionId, ipAddress: serverIp, timestamp: DateTimeOffset.Now);
+        var message = snapshot.ToServerMetrics(connectionId: Context.ConnectionId, ipAddress: feature?.RemoteIpAddress ?? IPAddress.None, timestamp: DateTimeOffset.Now);
         await _queue.EnqueueAsync(message);
     }
 }

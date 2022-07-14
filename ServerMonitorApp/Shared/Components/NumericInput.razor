@@ -18,10 +18,10 @@
 @code {
 
     [Parameter]
-    public int Value {get;set;}
+    public EventCallback<int> ValueChanged { get; set; }
 
     [Parameter]
-    public EventCallback<int> ValueChanged { get; set; }
+    public int Value { get; set; }
 
     [Parameter]
     public int Min { get; set; } = int.MinValue;
@@ -30,10 +30,13 @@
     public int Max { get; set; } = int.MaxValue;
 
     [Parameter]
+    public int DefaultValue { get; set; }
+
+    [Parameter]
     public string Placeholder { get; set; } = string.Empty;
 
     [Parameter]
-    public int DefaultValue { get; set; }
+    public string ValidationMessage { get; set; } = $"Enter a numeric value greater than zero";
 
     [Parameter]
     public string Class { get; set; } = string.Empty;
@@ -87,7 +90,7 @@
         if (int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result) && IsCorrectRange(result))
             return true;
 
-        validationErrorMessage = $"Enter a numeric value greater than zero";
+        validationErrorMessage = ValidationMessage;
         return false;
     }
 

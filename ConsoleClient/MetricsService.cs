@@ -46,7 +46,7 @@ public sealed class MetricsService : BackgroundService {
                 return Task.CompletedTask;
             };
 
-            connection.On<ConfigurationMessage>("ReceiveConfiguration", newConfiguration => {
+            connection.On<ConfigurationMessage>(MonitorHubClient.ReceiveConfiguration, newConfiguration => {
                 _logger.LogInformation($"Received {newConfiguration}");
                 _configuration = _configuration.ReplaceUpdateInterval(newConfiguration.UpdateIntervalSeconds * 1000);
             });

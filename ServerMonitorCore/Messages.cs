@@ -6,6 +6,11 @@ public interface IMonitorHubClient {
     Task ReceiveConfiguration(ConfigurationMessage message);
 }
 
+public abstract class MonitorHubClient {
+    public const string ReceiveConfiguration = "ReceiveConfiguration";
+}
+
+
 public sealed class 
 ConfigurationMessage {
     public int UpdateIntervalSeconds { get; }

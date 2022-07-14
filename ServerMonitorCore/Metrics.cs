@@ -1,5 +1,6 @@
 ﻿using ServerMonitorCore.Common;
 using System.Collections.Immutable;
+using System.Net;
 
 namespace ServerMonitorCore;
 
@@ -41,12 +42,14 @@ MetricsSnapshot {
         }
     }
 
+    public int MemoryUsageMBytes => TotalMemoryMBytes - AvailableMemoryMBytes;
+
     public string MemoryUsage => $"{TotalMemoryMBytes - AvailableMemoryMBytes} / {TotalMemoryMBytes} MB";
 
     public string DrivesUsage => Drives.Aggregate(string.Empty, (s, drive) => s + drive + Environment.NewLine);
 
     public override string ToString() =>
-        $"CPU: {ProcessorUsagePercent:F2}%, Memory: {AvailableMemoryMBytes.FromMBytes().Gigabytes:F2} / {TotalMemoryMBytes.FromMBytes().Gigabytes:F2} GB, Drives: "  +
+        $"CPU: {ProcessorUsagePercent:F2}%, Memory: {MemoryUsageMBytes.FromMBytes().Gigabytes:F2} / {TotalMemoryMBytes.FromMBytes().Gigabytes:F2} GB, Drives: "  +
         Drives.Aggregate(string.Empty, (s, drive) => s + drive + Environment.NewLine);
 }
 
@@ -72,10 +75,10 @@ public sealed class
 ServerMetrics {
     public MetricsSnapshot Snapshot { get; }
     public string ConnectionId { get; }
-    public string IpAddress { get; }
+    public IPAddress IpAddress { get; }
     public DateTimeOffset Timestamp { get; }
 
-    public ServerMetrics(MetricsSnapshot snapshot, string connectionId, string ipAddress, DateTimeOffset timestamp) {
+    public ServerMetrics(MetricsSnapshot snapshot, string connectionId, IPAddress ipAddress, DateTimeOffset timestamp) {
         Snapshot = snapshot;
         ConnectionId = connectionId;
         IpAddress = ipAddress;
@@ -85,6 +88,6 @@ ServerMetrics {
 
 public static class MetricsHelper {
     public static ServerMetrics
-    ToServerMetrics(this MetricsSnapshot snapshot, string connectionId, string ipAddress, DateTimeOffset timestamp) =>
+    ToServerMetrics(this MetricsSnapshot snapshot, string connectionId, IPAddress ipAddress, DateTimeOffset timestamp) =>
         new(snapshot: snapshot, connectionId: connectionId, ipAddress: ipAddress, timestamp: timestamp);
 }

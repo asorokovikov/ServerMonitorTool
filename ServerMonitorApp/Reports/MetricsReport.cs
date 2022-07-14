@@ -9,7 +9,6 @@ namespace ServerMonitorApp.Reports;
 public record StartReceivingMetricsAction();
 public record StopReceivingMetricsAction();
 
-
 [FeatureState]
 public record MetricsReport {
     public ImmutableDictionary<string, ServerMetrics> ConnectionIdToMetrics { get; init; }

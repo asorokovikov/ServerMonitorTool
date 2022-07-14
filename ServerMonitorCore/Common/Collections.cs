@@ -19,4 +19,16 @@ public static class Collections {
             yield return (index++, item);
     }
 
+    public static bool
+    NotContains<TSource>(this IEnumerable<TSource> source, TSource value) => !source.Contains(value);
+
+    public static bool
+    IsNotEmpty<TSource>(this TSource[] source) => source.Length > 0;
+
+    public static void
+    ForEach<T>(this IEnumerable<T> collection, Action<T> action) {
+        foreach (var item in collection)
+            action(item);
+    }
+
 }
