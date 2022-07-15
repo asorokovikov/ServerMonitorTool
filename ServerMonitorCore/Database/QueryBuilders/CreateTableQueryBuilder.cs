@@ -1,13 +1,13 @@
 using ServerMonitorCore.Common;
 using System.Text;
 
-namespace ServerMonitorCore.Database;
-
-public interface ICreateTableQueryBuilder : IBuilder, ICreateTableQuery { }
+namespace ServerMonitorCore.Database.QueryBuilders;
 
 public interface ICreateTableQuery {
     ICreateTableQueryBuilder WithColumn(string columnName, QueryBuilderColumnType type, params QueryBuilderColumnAttributes[] attributes);
 }
+
+public interface ICreateTableQueryBuilder : IBuilder, ICreateTableQuery { }
 
 public enum QueryBuilderColumnType {
 

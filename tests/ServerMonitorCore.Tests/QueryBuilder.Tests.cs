@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using ServerMonitorCore.Database;
-using static ServerMonitorCore.Database.QueryBuilderColumnType;
-using static ServerMonitorCore.Database.QueryBuilderColumnAttributes;
+using static ServerMonitorCore.Database.QueryBuilders.QueryBuilderColumnType;
+using static ServerMonitorCore.Database.QueryBuilders.QueryBuilderColumnAttributes;
 
 namespace ServerMonitorCore.Tests;
 

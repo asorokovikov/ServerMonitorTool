@@ -1,15 +1,14 @@
-using ServerMonitorCore.Common;
-using System.Diagnostics;
 using System.Text;
+using System.Diagnostics;
+using ServerMonitorCore.Common;
 
-namespace ServerMonitorCore.Database;
+namespace ServerMonitorCore.Database.QueryBuilders;
 
 public interface ISelectQueryBuilder : IBuilder {
     IBuilder WithColumn(params string[] columns);
 }
 
 public sealed class SelectQueryBuilder : ISelectQueryBuilder, IBuilder {
-
     private readonly StringBuilder _builder = new();
     private readonly string _tableName;
 
@@ -34,3 +33,4 @@ public sealed class SelectQueryBuilder : ISelectQueryBuilder, IBuilder {
         return _builder.ToString();
     }
 }
+

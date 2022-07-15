@@ -1,12 +1,12 @@
-﻿using System.Collections.Immutable;
+﻿using Npgsql;
 using System.Net;
+using System.Collections.Immutable;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Npgsql;
 using ServerMonitorCore.Common;
 
-using static ServerMonitorCore.Database.QueryBuilderColumnAttributes;
-using static ServerMonitorCore.Database.QueryBuilderColumnType;
+using static ServerMonitorCore.Database.QueryBuilders.QueryBuilderColumnAttributes;
+using static ServerMonitorCore.Database.QueryBuilders.QueryBuilderColumnType;
 
 namespace ServerMonitorCore.Database;
 
@@ -17,10 +17,6 @@ public interface IRepository<TItem> where TItem : class {
     Task RemoveAsync(int id);
     Task UpdateAsync(TItem item);
 }
-
-// public interface IMetricsRepository : IRepository<ServerMetrics> {
-//     Task<IReadOnlyCollection<ServerMetrics>> GetLatestMetrics();
-// }
 
 public sealed class PostgreMetricsRepository : IRepository<ServerMetrics> {
     private readonly ILogger _logger;

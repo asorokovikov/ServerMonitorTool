@@ -1,33 +1,13 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Reflection;
-using ServerMonitorCore.Common;
-using System.Text;
+﻿using ServerMonitorCore.Common;
+using ServerMonitorCore.Database.QueryBuilders;
 
 namespace ServerMonitorCore.Database;
-
-public interface IQueryBuilder {
-    ICreateTableQueryBuilder NewTable(string tableName);
-    IBuilder CreateDatabase();
-    IBuilder DropDatabaseIfExists();
-    ISelectQueryBuilder Select(string tableName);
-    IBuilder Get();
-}
 
 public interface IBuilder {
     string Build();
 }
 
-public interface IFilterQueryBuilder {
-    IBuilder Where(string column, string value);
-}
-
-
-public abstract class QueryBuilder { 
-
-    private readonly StringBuilder _builder = new ();
-
-    private QueryBuilder() { }
+public static class QueryBuilder { 
 
     public static string CreateDatabaseQuery(string databaseName) => 
         $"CREATE DATABASE {databaseName.VerifyNotEmpty(nameof(databaseName))};";
@@ -42,19 +22,5 @@ public abstract class QueryBuilder {
 
     public static ICreateTableQueryBuilder CreateTable(string tableName) => 
         new CreateTableQueryBuilder(tableName);
-
-    public string Build() {
-        if (_builder[^1] == ',') {
-            _builder.Remove(_builder.Length - 1, 1);
-            _builder.Append(");");
-        }
-        return _builder.ToString();
-    }
-
-}
-
-
-public static class QueryBuilderHelper {
-
 
 }
