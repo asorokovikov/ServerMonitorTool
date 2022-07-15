@@ -77,37 +77,4 @@ public sealed class QueryBuilderTests {
             .Build()
             .Should().Be("CREATE TABLE table (column1 int PRIMARY KEY,column2 real NOT NULL,column3 timestamp NOT NULL UNIQUE);");
     }
-
-    [Fact]
-    public void GetAll_Test() {
-        //var query = QueryBuilder.Create("database").Select("table").Get().Build();
-        //query.Should().Be($"SELEFT * FROM table;");
-    }
-
-            //var builder = QueryBuilder.Create(database);
-        //builder.NewTable(tableName)
-        //    .WithColumn("metrics_id", "serial PRIMARY KEY")
-        //    .WithColumn("ip_address", "cidr NOT NULL")
-        //    .WithColumn("processor_usage_percent", "real NOT NULL")
-        //    .WithColumn("available_memory_mbytes", "int NOT NULL")
-        //    .WithColumn("total_memory_mbytes", "int NOT NULL")
-        //    .WithColumn("timestamp", "timestamp NOT NULL");
-
-    //[Fact]
-    //public void CreateTable_OneColumn_With_Attributes_Test() {
-    //    const string databaseName = "database";
-    //    const string tableName = "someTable";
-    //    var builder = new QueryBuilder(databaseName);
-    //    builder.NewTable(tableName).WithColumn("column", "int", "attribute1 attribute2");
-    //    var query = builder.Build();
-
-    //    query.Should().Be($"CREATE TABLE {tableName} (column int attribute1 attribute2);");
-    //    //    .Column("column1", "type", "attribute1")
-    //    //    .Column("column2", "type", "attribute1 attribute2")
-    //    //    .Column("column3", "type");
-    //    //var query = 
-
-
-    //}
-
 }

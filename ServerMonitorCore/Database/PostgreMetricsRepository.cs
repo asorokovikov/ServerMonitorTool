@@ -10,27 +10,27 @@ using static ServerMonitorCore.Database.QueryBuilderColumnType;
 
 namespace ServerMonitorCore.Database;
 
-public interface IRepository<TItem, in TItemId> where TItem : class {
+public interface IRepository<TItem> where TItem : class {
     Task CreateAsync(TItem item);
     Task<IReadOnlyCollection<TItem>> GetAllAsync();
-    Task<TItem?> GetAsync(TItemId id);
-    Task RemoveAsync(TItemId id);
+    Task<TItem?> GetAsync(int id);
+    Task RemoveAsync(int id);
     Task UpdateAsync(TItem item);
 }
 
-public interface IMetricsRepository : IRepository<ServerMetrics, int> {
-    Task<IReadOnlyCollection<ServerMetrics>> GetLatestMetrics();
-}
+// public interface IMetricsRepository : IRepository<ServerMetrics> {
+//     Task<IReadOnlyCollection<ServerMetrics>> GetLatestMetrics();
+// }
 
-public sealed class DefaultMetricsRepository : IMetricsRepository {
+public sealed class PostgreMetricsRepository : IRepository<ServerMetrics> {
     private readonly ILogger _logger;
     private readonly DatabaseConfiguration _config;
 
     private string TableName => _config.MetricsTableName;
 
-    public DefaultMetricsRepository(
+    public PostgreMetricsRepository(
         IOptions<DatabaseConfiguration> options,
-        ILogger<DefaultMetricsRepository> logger
+        ILogger<PostgreMetricsRepository> logger
     ) {
         _config = options.Value;
         _logger = logger;
@@ -62,7 +62,7 @@ public sealed class DefaultMetricsRepository : IMetricsRepository {
         }
     }
 
-    public async Task CreateAsync(ServerMetrics item) {
+    public async Task CreateAsync(ServerMetrics item) { 
         var query = $"INSERT INTO {TableName}" +
             "(ip_address, cpu_usage_percent, memory_available_mbytes, memory_total_mbytes, timestamp) " +
             "VALUES ($1, $2, $3, $4, $5)";
@@ -87,7 +87,7 @@ public sealed class DefaultMetricsRepository : IMetricsRepository {
         }
     }
 
-    public async Task<ServerMetrics> GetAsync(int id) {
+    public async Task<ServerMetrics?> GetAsync(int id) {
         await using var connection = _config.GetConnectionToDatabase();
         await connection.OpenAsync();
         await using var command = new NpgsqlCommand($"SELECT * FROM {TableName} WHERE ID = $1", connection);

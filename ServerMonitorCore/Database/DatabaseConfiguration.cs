@@ -29,7 +29,7 @@ public static class DatabaseHelper {
     public static IHost PrepareDatabase(this IHost app) {
         using var scopedServices = app.Services.CreateScope();
         var serviceProvider = scopedServices.ServiceProvider;
-        var repository = serviceProvider.GetRequiredService<DefaultMetricsRepository>();
+        var repository = serviceProvider.GetRequiredService<PostgreMetricsRepository>();
         repository.EnsureDeletedAsync().Wait();
         repository.EnsureCreatedAsync().Wait();
         return app;
@@ -37,9 +37,9 @@ public static class DatabaseHelper {
 
     public static IServiceCollection
     AddDatabase(this IServiceCollection services) {
-        services.AddTransient<IRepository<ServerMetrics, int>, DefaultMetricsRepository>();
-        services.AddTransient<IMetricsRepository, DefaultMetricsRepository>();
-        services.AddTransient<DefaultMetricsRepository>();
+        services.AddTransient<IRepository<ServerMetrics>, PostgreMetricsRepository>();
+        // services.AddTransient<IMetricsRepository, PostgreMetricsRepository>();
+        services.AddTransient<PostgreMetricsRepository>();
         return services;
     }
 }

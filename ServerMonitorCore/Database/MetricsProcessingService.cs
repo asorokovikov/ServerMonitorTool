@@ -6,13 +6,13 @@ using ServerMonitorCore.Notifications;
 namespace ServerMonitorCore.Database;
 
 public sealed class MetricsProcessingService : BackgroundService {
-    private readonly IRepository<ServerMetrics, int> _repository;
+    private readonly IRepository<ServerMetrics> _repository;
     private readonly Channel<ServerMetrics> _channel;
     private readonly IDisposable _disposable;
     private readonly ILogger _logger;
 
     public MetricsProcessingService(
-        IRepository<ServerMetrics, int> repository,
+        IRepository<ServerMetrics> repository,
         INotificationManager<ServerMetrics> notificationManager,
         ILogger<MetricsProcessingService> logger
     ) {

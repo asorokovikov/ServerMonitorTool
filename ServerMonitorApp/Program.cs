@@ -29,8 +29,8 @@ builder.Services.AddResponseCompression(options => {
 
 builder.Logging.AddLogger();
 builder.Services.Configure<DatabaseConfiguration>(builder.Configuration.GetSection(nameof(DatabaseConfiguration)));
-builder.Services.AddTransient<IRepository<ServerMetrics, int>, DefaultMetricsRepository>();
-builder.Services.AddTransient<DefaultMetricsRepository>();
+builder.Services.AddTransient<IRepository<ServerMetrics>, PostgreMetricsRepository>();
+builder.Services.AddTransient<PostgreMetricsRepository>();
 builder.Services.AddHostedService<MetricsProcessingService>();
 builder.Services.AddNotification<LogMessage>();
 builder.Services.AddNotification<ServerMetrics>();
