@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ServerMonitorCore.Common;
 
@@ -18,7 +13,7 @@ public static class Attributes {
     private static readonly Dictionary<Type, Dictionary<Type, Dictionary<object, object?>>> AttributesCache = new();
     private static object _lockObject = new();
 
-    private static Dictionary<object, object?> 
+    private static Dictionary<object, object?>
     GetEnumAttributeCache(this Type enumType, Type attributeType) {
         if (AttributesCache.TryGetValue(enumType, out var attributes)) {
             if (attributes.TryGetValue(attributeType, out var result))
@@ -28,7 +23,7 @@ public static class Attributes {
             return result;
         }
 
-        lock(_lockObject) {
+        lock (_lockObject) {
             attributes = new();
             attributes[attributeType] = new();
             AttributesCache[enumType] = attributes;
@@ -38,11 +33,10 @@ public static class Attributes {
 
     public static string
     GetName<T>(this T value) where T : Enum {
-        if (value.TryGetEnumAttributes<NameAttribute>(out var result)) 
+        if (value.TryGetEnumAttributes<NameAttribute>(out var result))
             return result.Name;
         return value.ToString();
     }
-
 
     private static T GetAttribute<T>(this object value) {
         var attributes = value is PropertyInfo propertyInfo
@@ -50,7 +44,7 @@ public static class Attributes {
             : value.GetType().GetCustomAttributes(typeof(T), true);
         if (attributes.Length == 0)
             throw new InvalidOperationException($"Expecting attribute {typeof(T)} on {value}");
-        return (T) attributes[0];
+        return (T)attributes[0];
     }
 
     private static bool TryGetEnumAttributes<T>(this object @object, [NotNullWhen(true)] out T? result) {
@@ -85,5 +79,4 @@ public static class Attributes {
         }
         return false;
     }
-
 }
